@@ -1,0 +1,37 @@
+{
+  "name": "dnd5e-gestalt-characters",
+  "title": "D&D 5e Gestalt Characters",
+  "description": "A module to enable gestalt characters in D&D 5e",
+  "version": "1.0.0",
+  "author": "Ruben",
+  "authors": [
+    {
+      "name": "Ruben",
+      "email": "your.email@example.com",
+      "url": "https://yourwebsite.com"
+    }
+  ],
+  "systems": ["dnd5e"],
+  "scripts": ["scripts/gestalt-characters.js"],
+  "styles": ["styles/gestalt-characters.css"],
+  "packs": [],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+  "url": "https://github.com/Randme/dnd5e-gestalt-characters",
+  "manifest": "https://raw.githubusercontent.com/Randme/dnd5e-gestalt-characters/main/module.json",
+  "download": "https://github.com/Randme/dnd5e-gestalt-characters/archive/v1.0.0.zip",
+  "minimumCoreVersion": "9",
+  "compatibleCoreVersion": "10",
+  "compatibility": {
+    "minimum": "9",
+    "verified": "11"
+  },
+  "esmodules": ["scripts/gestalt-characters.js"],
+  "socket": true,
+  "changelog": "https://github.com/yourusername/dnd5e-gestalt-characters/releases"
+}
