@@ -26,10 +26,10 @@
   "manifest": "https://raw.githubusercontent.com/Randme/dnd5e-gestalt-characters/main/module.json",
   "download": "https://github.com/Randme/dnd5e-gestalt-characters/archive/v1.0.0.zip",
   "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "10",
+  "compatibleCoreVersion": "11",
   "compatibility": {
     "minimum": "9",
-    "verified": "10"
+    "verified": "11"
   },
   "esmodules": ["scripts/gestalt-characters.js"],
   "socket": true,
