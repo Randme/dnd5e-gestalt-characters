@@ -33,5 +33,5 @@
   },
   "esmodules": ["scripts/gestalt-characters.js"],
   "socket": true,
-  "changelog": "https://github.com/yourusername/dnd5e-gestalt-characters/releases"
+  "changelog": "https://github.com/Randme/dnd5e-gestalt-characters/releases"
 }
