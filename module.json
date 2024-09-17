@@ -29,7 +29,7 @@
   "compatibleCoreVersion": "10",
   "compatibility": {
     "minimum": "9",
-    "verified": "11"
+    "verified": "10"
   },
   "esmodules": ["scripts/gestalt-characters.js"],
   "socket": true,
