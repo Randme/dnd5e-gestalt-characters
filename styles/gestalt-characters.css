@@ -1,0 +1,44 @@
+/* Gestalt character sheet modifications */
+
+.gestalt-class-select {
+  margin-bottom: 10px;
+}
+
+.gestalt-class-select label {
+  display: inline-block;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.gestalt-class-select select {
+  width: auto;
+  display: inline-block;
+}
+
+.gestalt-feature {
+  color: #7b68ee;  /* A distinct color for gestalt features */
+  font-style: italic;
+}
+
+/* Highlight the gestalt class in the character summary */
+.character-summary .gestalt-class {
+  color: #4b0082;  /* Indigo color to stand out */
+  font-weight: bold;
+}
+
+/* Style for the gestalt features list */
+.gestalt-features-list {
+  border-left: 3px solid #7b68ee;
+  padding-left: 10px;
+  margin-top: 10px;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+  .gestalt-class-select label,
+  .gestalt-class-select select {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+}
