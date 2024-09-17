@@ -3,20 +3,35 @@ import { libWrapper } from './libWrapper/shim.js';
 class GestaltActorSheet extends dnd5e.applications.actor.ActorSheet5eCharacter {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
-      classes: ["dnd5e", "sheet", "actor", "character", "gestalt"],
-      template: "modules/dnd5e-gestalt-characters/templates/gestalt-character-sheet.html"
+      classes: ["dnd5e", "sheet", "actor", "character", "gestalt"]
     });
   }
 
-  getData() {
-    const data = super.getData();
+  async getData() {
+    const data = await super.getData();
     data.gestaltClass = this.actor.getFlag("dnd5e-gestalt-characters", "gestaltClass") || {};
     return data;
   }
 
   activateListeners(html) {
     super.activateListeners(html);
-    html.find('.gestalt-class-select').change(this._onGestaltClassChange.bind(this));
+    this._injectGestaltOptions(html);
+  }
+
+  _injectGestaltOptions(html) {
+    const classSelectHTML = `
+      <div class="form-group gestalt-class-select">
+        <label>Gestalt Class:</label>
+        <select name="flags.dnd5e-gestalt-characters.gestaltClass">
+          <option value="">None</option>
+          ${Object.entries(CONFIG.DND5E.classes).map(([key, cls]) => 
+            `<option value="${key}" ${this.actor.getFlag("dnd5e-gestalt-characters", "gestaltClass") === key ? 'selected' : ''}>${cls.label}</option>`
+          ).join('')}
+        </select>
+      </div>
+    `;
+    html.find('.charlevel').after(classSelectHTML);
+    html.find('.gestalt-class-select select').on('change', this._onGestaltClassChange.bind(this));
   }
 
   async _onGestaltClassChange(event) {
@@ -52,19 +67,22 @@ Hooks.once('init', () => {
   });
 });
 
-Hooks.on("dnd5e.preCreateActor", (actor, data, options, userId) => {
+Hooks.on("createActor", (actor, data, options, userId) => {
   if (actor.type === "character") {
     // Initialize gestalt class data
-    actor.setFlag("dnd5e-gestalt-characters", "gestaltClass", {});
+    actor.setFlag("dnd5e-gestalt-characters", "gestaltClass", "");
   }
 });
 
-Hooks.on("dnd5e.preAdvancementLevelUp", (actor, level, updates) => {
+Hooks.on("dnd5e.preAdvancementLevelUp", (actor, advancementClass, level, changes) => {
   if (actor.type === "character") {
     const gestaltClass = actor.getFlag("dnd5e-gestalt-characters", "gestaltClass");
     if (gestaltClass) {
       // Add gestalt class features (this is a placeholder - actual implementation would be more complex)
-      updates.push({ "items": [{ "name": `Gestalt Feature Level ${level}`, "type": "feat" }] });
+      changes.push({
+        "name": `Gestalt ${CONFIG.DND5E.classes[gestaltClass].label} Feature`,
+        "type": "feat"
+      });
       
       // Handle hit points
       const primaryClass = actor.classes[Object.keys(actor.classes)[0]];
@@ -79,7 +97,11 @@ Hooks.on("dnd5e.preAdvancementLevelUp", (actor, level, updates) => {
         const conMod = actor.system.abilities.con.mod;
         const hpIncrease = Math.floor(higherHitDie / 2 + 1) + conMod;
         
-        updates.push({ "system.attributes.hp.max": actor.system.attributes.hp.max + hpIncrease });
+        changes.push({
+          "path": "system.attributes.hp.max",
+          "value": actor.system.attributes.hp.max + hpIncrease,
+          "mode": CONST.ACTIVE_EFFECT_MODES.OVERRIDE
+        });
       }
       
       // Do not add additional Hit Dice
@@ -99,7 +121,7 @@ libWrapper.register('dnd5e-gestalt-characters', 'CONFIG.Actor.documentClass.prot
     if (primaryClass && gestaltClassConfig) {
       const primaryHitDie = parseInt(primaryClass.hitDice.slice(1));
       const gestaltHitDie = parseInt(gestaltClassConfig.hitDice.slice(1));
-      data.denom = Math.max(primaryHitDie, gestaltHitDie);
+      data.hitDice = `1d${Math.max(primaryHitDie, gestaltHitDie)}`;
     }
   }
   
@@ -115,6 +137,7 @@ libWrapper.register('dnd5e-gestalt-characters', 'CONFIG.Actor.documentClass.prot
     // Add gestalt class features to roll data (this is a placeholder - actual implementation would be more complex)
     data.gestalt = {
       class: gestaltClass,
+      level: this.system.details.level,
       // Add other relevant gestalt data here
     };
   }
